@@ -3,6 +3,8 @@ import { Formik } from 'formik';//para el formulario
 import { View, Text, TextInput, Button, StyleSheet, FlatList, TouchableOpacity, Modal } from 'react-native';
 import * as Yup from 'yup'; //para la validacion 
 import RNPickerSelect from 'react-native-picker-select';// para el selector de ingresos 
+import { useNavigation } from '@react-navigation/native';
+
 
 
 //validaciones
@@ -12,6 +14,11 @@ const validationSchema = Yup.object().shape({
 });
 
 export default function Ingresos() {
+
+  const navigation = useNavigation();
+
+
+
   const [ingresos, setIngresos] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [editingIndex, setEditingIndex] = useState(null);
@@ -157,6 +164,12 @@ export default function Ingresos() {
           </View>
         </View>
       </Modal>
+      {/*button para la pantalla graficas*/}
+      <Button
+      title="Ir a Egresos"
+      onPress={() => navigation.navigate('FormularioEgresos')}
+      />
+
     </View>
   );
 }
