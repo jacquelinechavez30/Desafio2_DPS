@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Formik } from 'formik';
+import { Formik, Form } from 'formik';
 import { View, Text, TextInput, Button, FlatList, TouchableOpacity, Modal } from 'react-native';
 import * as Yup from 'yup';
 import RNPickerSelect from 'react-native-picker-select';
@@ -56,6 +56,7 @@ export default function Ingresos() {
         validationSchema={validationSchema}
         onSubmit={guardarIngreso}
       >
+        
         {({ handleChange, handleSubmit, values, errors, touched, setFieldValue }) => (
           <View>
             <Text>Tipo de Ingreso:</Text>
@@ -87,21 +88,23 @@ export default function Ingresos() {
         )}
       </Formik>
 
-      {ingresos.length > 0 && (
-        <View>
-          <Text>Lista de los ingresos:</Text>
-          <FlatList
-            data={ingresos}
-            keyExtractor={(item, index) => index.toString()}
-            renderItem={({ item, index }) => (
-              <TouchableOpacity onPress={() => editarIngreso(index)}>
-                <Text>Tipo de Ingreso: {item.tipoIngreso}</Text>
-                <Text>Monto: ${item.monto}</Text>
-              </TouchableOpacity>
-            )}
-          />
-        </View>
+      {ingresos.length > 0 ? (
+  <View>
+    <Text>Lista de los ingresos:</Text>
+    <FlatList
+      data={ingresos}
+      keyExtractor={(item, index) => index.toString()}
+      renderItem={({ item, index }) => (
+        <TouchableOpacity onPress={() => editarIngreso(index)}>
+          <Text>Tipo de Ingreso: {item.tipoIngreso}</Text>
+          <Text>Monto: ${item.monto}</Text>
+        </TouchableOpacity>
       )}
+    />
+  </View>
+) : (
+  <Text>No hay ingresos disponibles.</Text>
+)}
 
       {/* Modal para editar ingresos */}
       <Modal
