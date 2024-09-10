@@ -11,11 +11,7 @@ export default function Egresos() {
   return (
     <View>
       <Text>Pantalla de Egresos prueba </Text>
-      <Text>Presiona el botón para volver al formulario de ingresos</Text>
-      <Button
-        title="Ir a Ingresos"
-        onPress={() => navigation.navigate('FormularioIngreso')}
-        />
+      
        <Text>
         para ir a graficas
        </Text>
