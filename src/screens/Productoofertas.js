@@ -8,8 +8,8 @@ export default function Productoofertas() {
     <View>
       <Text>Productoofertas</Text>
       <Button
-        title="Ir a Graficas"
-        onPress={() => navigation.navigate('Grafica')}
+        title="Volver a inicio"
+        onPress={() => navigation.navigate('Stackdatos')}
         />
     </View>
   )

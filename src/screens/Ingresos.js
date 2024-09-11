@@ -231,14 +231,8 @@ export default function Ingresos() {
           title="Ir a Graficas"
           onPress={() => navigation.navigate("Grafica", { ingresos })}
         />
-      ) : (
-        <View>
-          <Button title="Ir a Graficas" />
-          <Text>No hay ingresos disponibles para generar gráficas.</Text>
-          
-        </View>
-      )}
-
+      ) : null
+      }
       <Button
         title="Ir a Egresos"
         onPress={() => navigation.navigate("FormularioEgresos", { ingresos })}
