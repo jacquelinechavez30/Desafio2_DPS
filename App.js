@@ -7,8 +7,9 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Stackdatos from './src/screens/Stackdatos';
 import Productoofertas from './src/screens/Productoofertas';
 import { IngresosProvider } from './src/screens/IngresosContext';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'react-native-gesture-handler';
 const Tab= createBottomTabNavigator();
-
 
 export default function App() {
   return (
