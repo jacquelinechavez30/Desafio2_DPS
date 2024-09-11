@@ -6,6 +6,7 @@ import Ingresos from './Ingresos'; // Importa el archivo Ingresos.js
 import Egresos from './Egresos';
 import Grafica from './Graficas'
 
+
 const Stack = createStackNavigator();
 
 export default function Stackdatos() {

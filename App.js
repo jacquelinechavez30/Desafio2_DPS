@@ -6,17 +6,20 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Stackdatos from './src/screens/Stackdatos';
 import Productoofertas from './src/screens/Productoofertas';
+import { IngresosProvider } from './src/screens/IngresosContext';
 const Tab= createBottomTabNavigator();
 
 
 export default function App() {
   return (
 
-    <NavigationContainer>
+   <IngresosProvider>
+     <NavigationContainer>
       <Tab.Navigator  initialRouteName="Productoofertas">
         <Tab.Screen name="Stackdatos" component={Stackdatos} options={{ title: 'Datos del Cliente' }} />
         <Tab.Screen name="Productoofertas" component={Productoofertas} options={{ title: 'Productos y Ofertas' }} />
       </Tab.Navigator>
     </NavigationContainer>
+   </IngresosProvider>
   );
 }
