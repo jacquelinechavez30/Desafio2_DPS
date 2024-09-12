@@ -5,7 +5,7 @@ import { BarChart } from 'react-native-chart-kit';
 
 export default function Graficas() {
   const route = useRoute();
-  const { ingresos } = route.params;
+  const { ingresos = [] } = route.params;
   const screenWidth = Dimensions.get('window').width;
 
   console.log('Ingresos en Graficas:', ingresos);

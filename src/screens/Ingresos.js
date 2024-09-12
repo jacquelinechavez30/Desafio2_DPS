@@ -12,7 +12,6 @@ import {
 import * as Yup from "yup";
 import RNPickerSelect from "react-native-picker-select";
 import { useNavigation } from "@react-navigation/native";
-import { useIngresos } from "./IngresosContext";
 
 // Validaciones
 const validationSchema = Yup.object().shape({
@@ -20,7 +19,7 @@ const validationSchema = Yup.object().shape({
   monto: Yup.number()
     .typeError("El monto debe ser un número")
     .required("Ingresa un monto $")
-    .positive("El monto debe ser  un valor positivo"),
+    .positive("El monto debe ser un valor positivo"),
 });
 
 export default function Ingresos() {
@@ -225,14 +224,6 @@ export default function Ingresos() {
           </View>
         </View>
       </Modal>
-      {/* Button para la pantalla de egresos */}
-      {ingresos.length > 0 ? (
-        <Button
-          title="Ir a Graficas"
-          onPress={() => navigation.navigate("Grafica", { ingresos })}
-        />
-      ) : null
-      }
       <Button
         title="Ir a Egresos"
         onPress={() => navigation.navigate("FormularioEgresos", { ingresos })}
