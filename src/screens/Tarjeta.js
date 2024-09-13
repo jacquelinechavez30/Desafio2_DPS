@@ -2,10 +2,9 @@ import { View, Text, Button, StyleSheet, Modal } from 'react-native';
 import React, { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 
-export default function Productoofertas() {
+export default function Tarjeta({ cardType }) {
   const navigation = useNavigation();
   const [modalVisible, setModalVisible] = useState(false);
-  const [cardType, setCardType] = useState('Clasica'); // Estado para el tipo de tarjeta
 
   // Función para obtener los estilos según el tipo de tarjeta
   const getCardStyle = () => {
@@ -27,11 +26,9 @@ export default function Productoofertas() {
 
   return (
     <View style={styles.container}>
-      <Text>Productoofertas</Text>
-
+      {/* Botón para abrir el modal */}
       <Button title="Ver tarjeta" onPress={() => setModalVisible(true)} />
-      <Button title="Volver a inicio" onPress={() => navigation.navigate('Stackdatos')} />
-
+      
       <Modal
         animationType="slide"
         transparent={true}
@@ -39,9 +36,8 @@ export default function Productoofertas() {
         onRequestClose={() => setModalVisible(false)}
       >
         <View style={styles.modalContainer}>
-          <Text>Tarjeta </Text>
           <View style={[styles.card, { backgroundColor }]}>
-           
+            {/* Rectángulo de diseño en la tarjeta */}
             <View style={[styles.rect, { backgroundColor: rectColor }]} />
 
             {/* Detalle del chip */}
@@ -51,27 +47,23 @@ export default function Productoofertas() {
               <View style={styles.chipLine} />
             </View>
 
+            {/* Número de tarjeta */}
             <Text style={styles.cardNumber}>3056 930902 5904</Text>
 
+            {/* Información del propietario */}
             <View style={styles.bottomInfo}>
               <View>
                 <Text style={styles.label}>Nombre del propietario</Text>
                 <Text style={styles.name}>JOHN DOE</Text>
               </View>
               <View style={styles.expirationContainer}>
-                <Text style={styles.label}>Fecha valida</Text>
+                <Text style={styles.label}>Fecha válida</Text>
                 <Text style={styles.expiration}>01/2023</Text>
               </View>
             </View>
           </View>
 
-          <View style={styles.buttonGroup}>
-            <Button title="Clásica" onPress={() => setCardType('Clasica')} />
-            <Button title="Oro" onPress={() => setCardType('Oro')} />
-            <Button title="Platinum" onPress={() => setCardType('Platinum')} />
-            <Button title="Black" onPress={() => setCardType('Black')} />
-          </View>
-
+          {/* Botón para cerrar el modal */}
           <Button title="Cerrar" onPress={() => setModalVisible(false)} />
         </View>
       </Modal>
@@ -82,8 +74,8 @@ export default function Productoofertas() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
     justifyContent: 'center',
+    alignItems: 'center',
   },
   modalContainer: {
     flex: 1,
@@ -159,10 +151,5 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-  },
-  buttonGroup: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    marginTop: 20,
   },
 });
