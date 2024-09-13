@@ -12,6 +12,7 @@ import {
 import * as Yup from "yup";
 import RNPickerSelect from "react-native-picker-select";
 import { useNavigation } from "@react-navigation/native";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // Validaciones
 const validationSchema = Yup.object().shape({
@@ -28,12 +29,25 @@ export default function Ingresos() {
   const [ingresos, setIngresos] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [editingIndex, setEditingIndex] = useState(null);
+  const [datos, setDatos] = useState([]); // Se agrega para guardar los datos en storage
+
+  // Función para guardar los datos en storage
+  const guardarDatosStorage = async (dato) => {
+    try {
+      const datosJSON = JSON.stringify(dato);
+      await AsyncStorage.setItem('ingresos', datosJSON);
+      setDatos([...datos, datosJSON]);
+      console.log('Datos guardados' + datosJSON);
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   // Función para guardar un nuevo ingreso
   const guardarIngreso = (values, { resetForm }) => {
     console.log("Nuevo ingreso:", values); // Verifica el ingreso añadido
     setIngresos([...ingresos, values]);
-
+    guardarDatosStorage([...ingresos, values]);
     resetForm();
   };
 
@@ -49,6 +63,7 @@ export default function Ingresos() {
       index === editingIndex ? values : ingreso
     );
     setIngresos(updatedIngresos);
+    guardarDatosStorage(updatedIngresos);
     setEditingIndex(null);
     setModalVisible(false);
   };
@@ -59,6 +74,7 @@ export default function Ingresos() {
       (_, index) => index !== editingIndex
     );
     setIngresos(updatedIngresos);
+    guardarDatosStorage(updatedIngresos);
     setEditingIndex(null);
     setModalVisible(false);
   };
@@ -170,7 +186,7 @@ export default function Ingresos() {
                   setFieldValue,
                 }) => (
                   <View>
-                    <Text>Editar Ingreso :</Text>
+                    <Text>Editar Ingreso:</Text>
                     <RNPickerSelect
                       onValueChange={(value) =>
                         setFieldValue("tipoIngreso", value)
@@ -192,7 +208,7 @@ export default function Ingresos() {
                       <Text>{errors.tipoIngreso}</Text>
                     )}
 
-                    <Text>Introduce el valor del monto del ingreso :</Text>
+                    <Text>Introduce el valor del monto del ingreso:</Text>
                     <TextInput
                       onChangeText={handleChange("monto")}
                       value={values.monto}

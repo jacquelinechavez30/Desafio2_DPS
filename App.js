@@ -7,6 +7,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Stackdatos from './src/screens/Stackdatos';
 import Productoofertas from './src/screens/Productoofertas';
 import { IngresosProvider } from './src/screens/IngresosContext';
+import Ingresos from './src/screens/Ingresos';
 //import AsyncStorage from '@react-native-async-storage/async-storage';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'react-native-gesture-handler';
@@ -32,12 +33,14 @@ export default function App() {
         obtenerDatosStorage();}, []);*/
 
   // guardar los datos en storage
-  /*const guardarDatosStorage = async (datosJSON) => {
+  /*const guardarDatosStorage = async (datos) => {
     try {
-      await AsyncStorage.setItem('datos', datosJSON.stringify(nuevosDatos));
-      setDatos(nuevosDatos);
+      const datosJSON = JSON.stringify(datos);
+      await AsyncStorage.setItem('datos', datosJSON);
+      setDatos(datosJSON);
+      console.log('Datos guardados' + datosJSON);
     } catch (error) {
-        console.log(error);
+      console.log(error);
     }
   }*/
   
@@ -54,3 +57,28 @@ export default function App() {
 
   );
 }
+
+/*
+  <IngresosProvider>
+    <NavigationContainer>
+      <Tab.Navigator  initialRouteName="Productoofertas">
+        <Tab.Screen name="Stackdatos" component={Stackdatos} options={{ title: 'Datos del Cliente' }} />
+        <Tab.Screen name="Productoofertas" component={Productoofertas} options={{ title: 'Productos y Ofertas' }} />
+      </Tab.Navigator>
+      <Ingresos guardarDatosStorage={guardarDatosStorage}/>
+    </NavigationContainer>
+    </IngresosProvider>
+*/
+
+/*
+const guardarDatosStorage = async (datos) => {
+    try {
+      const datosJSON = JSON.stringify(datos);
+      await AsyncStorage.setItem('datos', datosJSON);
+      setDatos(datosJSON);
+      console.log('Datos guardados' + datosJSON);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+*/

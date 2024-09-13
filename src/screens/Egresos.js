@@ -12,6 +12,7 @@ import {
 import * as Yup from "yup";
 import RNPickerSelect from "react-native-picker-select";
 import { useNavigation } from "@react-navigation/native";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // Validaciones
 const validationSchema = Yup.object().shape({
@@ -28,12 +29,25 @@ export default function Egresos() {
   const [egresos, setEgresos] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [editingIndex, setEditingIndex] = useState(null);
+  const [datos, setDatos] = useState([]); // Se agrega para guardar los datos en storage
+
+  // Función para guardar los datos en storage
+  const guardarDatosStorage = async (dato) => {
+    try {
+      const datosJSON = JSON.stringify(dato);
+      await AsyncStorage.setItem('egresos', datosJSON);
+      setDatos([...datos, datosJSON]);
+      console.log('Datos guardados' + datosJSON);
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   // Función para guardar un nuevo Egreso
   const guardarEgreso = (values, { resetForm }) => {
     console.log("Nuevo egreso:", values); // Verifica el Egreso añadido
     setEgresos([...egresos, values]);
-
+    guardarDatosStorage([...egresos, values]);
     resetForm();
   };
 
@@ -49,6 +63,7 @@ export default function Egresos() {
       index === editingIndex ? values : egreso
     );
     setEgresos(updateEgresos);
+    guardarDatosStorage(updateEgresos);
     setEditingIndex(null);
     setModalVisible(false);
   };
@@ -59,6 +74,7 @@ export default function Egresos() {
       (_, index) => index !== editingIndex
     );
     setEgresos(updateEgresos);
+    guardarDatosStorage(updateEgresos);
     setEditingIndex(null);
     setModalVisible(false);
   };
