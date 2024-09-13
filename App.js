@@ -1,12 +1,12 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+
+import { StyleSheet, Text, StatusBar, View } from 'react-native';
 import React , { useState, useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Stackdatos from './src/screens/Stackdatos';
 import Productoofertas from './src/screens/Productoofertas';
-import { IngresosProvider } from './src/screens/IngresosContext';
+
 //import AsyncStorage from '@react-native-async-storage/async-storage';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'react-native-gesture-handler';
@@ -42,15 +42,22 @@ export default function App() {
   }*/
   
   return (
-
-  <IngresosProvider>
+<View style={{ flex: 1 }}>
+      <StatusBar
+        barStyle="light-content" // También puede ser "dark-content"
+        backgroundColor="#6a51ae" // Solo en Android
+      />
+      {/* Resto de tu aplicación */}
+     
     <NavigationContainer>
       <Tab.Navigator  initialRouteName="Productoofertas">
         <Tab.Screen name="Stackdatos" component={Stackdatos} options={{ title: 'Datos del Cliente' }} />
         <Tab.Screen name="Productoofertas" component={Productoofertas} options={{ title: 'Productos y Ofertas' }} />
       </Tab.Navigator>
     </NavigationContainer>
-    </IngresosProvider>
+   
+
+    </View>
 
   );
 }

@@ -39,6 +39,7 @@ export default function Productoofertas() {
         onRequestClose={() => setModalVisible(false)}
       >
         <View style={styles.modalContainer}>
+          <Text>Tarjeta </Text>
           <View style={[styles.card, { backgroundColor }]}>
            
             <View style={[styles.rect, { backgroundColor: rectColor }]} />
