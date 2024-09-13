@@ -1,168 +1,177 @@
-import { View, Text, Button, StyleSheet, Modal } from 'react-native';
-import React, { useState } from 'react';
-import { useNavigation } from '@react-navigation/native';
+import { View,
+  Text,
+  TextInput,
+  Button,
+  FlatList,
+  TouchableOpacity,
+  Modal, } from 'react-native'
+import React , {  useEffect,useState }  from 'react'
+import { useNavigation } from '@react-navigation/native'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Productoofertas() {
-  const navigation = useNavigation();
-  const [modalVisible, setModalVisible] = useState(false);
-  const [cardType, setCardType] = useState('Clasica'); // Estado para el tipo de tarjeta
 
-  // Función para obtener los estilos según el tipo de tarjeta
-  const getCardStyle = () => {
-    switch (cardType) {
-      case 'Clasica':
-        return { backgroundColor: '#00cc00', rectColor: '#66ff66' };
-      case 'Oro':
-        return { backgroundColor: '#FFD700', rectColor: '#FFC107' };
-      case 'Platinum':
-        return { backgroundColor: '#333333', rectColor: '#D7D6E0' };
-      case 'Black':
-        return { backgroundColor: '#000000', rectColor: '#333333' };
-      default:
-        return { backgroundColor: '#ff9800', rectColor: '#ffa726' };
+    const navigation = useNavigation() //para navegar entre pantallas
+    const [ingresos, setIngresos] = useState([]);
+    const [egresos, setEgresos] = useState([]);
+    const [ofertas, setOfertas] = useState([])
+    //funcion para mostrar los datos
+    const cargarDatosStorage = async () => {
+    try {
+      const ingresosJSON = await AsyncStorage.getItem('ingresos');
+      const egresosJSON = await AsyncStorage.getItem('egresos');
+      if (ingresosJSON !== null) {
+        setIngresos(JSON.parse(ingresosJSON));
+      }
+      if (egresosJSON !== null) {
+        setEgresos(JSON.parse(egresosJSON));
+      }
+    } catch (error) {
+      console.log(error);
     }
-  };
+};
 
-  const { backgroundColor, rectColor } = getCardStyle();
+  useEffect(() => {
+    cargarDatosStorage();
+  }, []);
+
+  //comprobacion de los datos
+  console.log('Ingresos obtenidos:', ingresos);
+  console.log('Egresos obtenidos:', egresos);
+
+  //funcion para sumar los ingresos
+  const ingresostot = ingresos.reduce((acc, ingreso) => acc + parseFloat(ingreso.monto), 0);
+
+  //funcion para sumar los egresos
+  const eggresostot = egresos.reduce((acc, egreso) => acc + parseFloat(egreso.monto), 0);
+
+  console.log('Ingresos totales:', ingresostot);
+  console.log('Egresos totales:', eggresostot);
+
+    //funcion para conocer porcentaje de dinero sobrante
+    const sobraPorcentaje = (totalI, totalE) => {
+        return (((totalI - totalE) * 100) / totalI);
+    }
+
+    //funcion para mostrar los rangos de riesgo
+    const rangosRiesgo = () => {
+      if(console.log('r1: riesgo alto')) {
+        //aca se pone la interfaz con los productos que se ofrecen
+        return ['¡Apertura una cuenta con nosotros!']; //respuesta para mientras
+      }
+      else if(console.log('r2: riesgo suficiente')) {
+        return ['¡Apertura una cuenta con nosotros!','Tarjeta de crédito clásica','Crédito personal hasta $2,000'];
+      }
+      else if(console.log('r3: riesgo bueno')) {
+        return ['¡Apertura una cuenta con nosotros!','Tarjeta de crédito clásica','Tarjeta de crédito Oro','Crédito personal hasta $8,000'];
+      }
+      else if(console.log('r4: riesgo muy bueno')) {
+        return ['¡Apertura una cuenta con nosotros!','Tarjeta de crédito clásica','Tarjeta de crédito Oro','Tarjeta de crédito Platinum','Crédito personal hasta $25,000'];
+      }
+      else if(console.log('r5: riesgo excelente')) {
+        return ['¡Apertura una cuenta con nosotros!','Tarjeta de crédito clásica','Tarjeta de crédito Oro','Tarjeta de crédito Platinum','Tarjeta de crédito Black','Crédito personal hasta $50,000'];
+      }
+      else{
+        return  ['¡No se puede calcular el riesgo lo siento solo este se muestra!'];
+      }
+  }
+
+    //funcion para calificar el riesgo y ofrecer productos
+    const ingresosComparacion = () => {
+
+      switch (ingresostot, eggresostot) {
+        
+        case ingresostot <= 360:
+          console.log('r1: riesgo alto');
+          rangosRiesgo();
+          break;
+    
+        case ingresostot > 360 && ingresostot <= 700:
+          if(sobraPorcentaje(ingresostot, eggresostot) <= 40) {
+            console.log('r1: riesgo alto');
+            rangosRiesgo();
+          }
+          else if(sobraPorcentaje(ingresostot, eggresostot) > 40) {
+            console.log('r2: riesgo suficiente');
+            rangosRiesgo();
+          }
+          break;
+
+        case ingresostot > 700 && ingresostot <= 1200:
+          if(sobraPorcentaje(ingresostot, eggresostot) <= 20) {
+            console.log('r1: riesgo alto');
+            rangosRiesgo();
+          }
+          else if(sobraPorcentaje(ingresostot, eggresostot) > 20 && sobraPorcentaje(ingresostot, eggresostot) <= 40) {
+            console.log('r2: riesgo suficiente');
+            rangosRiesgo();
+          }
+          else if(sobraPorcentaje(ingresostot, eggresostot) > 40) {
+            console.log('r3: riesgo bueno');
+            rangosRiesgo();
+          }
+          break;
+
+        case ingresostot > 1200 && ingresostot <= 3000:
+          if(sobraPorcentaje(ingresostot, eggresostot) <= 20) {
+            console.log('r2: riesgo suficiente');
+            rangosRiesgo();
+          }
+          else if(sobraPorcentaje(ingresostot, eggresostot) > 20 && sobraPorcentaje(ingresostot, eggresostot) <= 40) {
+            console.log('r3: riesgo bueno');
+            rangosRiesgo();
+          }
+          else if(sobraPorcentaje(ingresostot, eggresostot) > 40) {
+            console.log('r4: riesgo muy bueno');
+            rangosRiesgo();
+          }
+          break;
+
+        case ingresostot > 3000:
+          if(sobraPorcentaje(ingresostot, eggresostot) <= 20) {
+            console.log('r3: riesgo bueno');
+            rangosRiesgo();
+          }
+          else if(sobraPorcentaje(ingresostot, eggresostot) > 20 && sobraPorcentaje(ingresostot, eggresostot) <= 30) {
+            console.log('r4: riesgo muy bueno');
+            rangosRiesgo();
+          }
+          else if(sobraPorcentaje(ingresostot, eggresostot) > 30) {
+            console.log('r5: riesgo excelente');
+            rangosRiesgo();
+          }
+          break;
+
+        default:
+          console.log('No se puede calcular el riesgo'); //respuesta para mientras al igual que los returns
+      }
+    }
+    useEffect(() => {
+      setOfertas(rangosRiesgo());
+  }, [ingresostot, eggresostot]);
+
 
   return (
-    <View style={styles.container}>
+    <View>
       <Text>Productoofertas</Text>
 
-      <Button title="Ver tarjeta" onPress={() => setModalVisible(true)} />
-      <Button title="Volver a inicio" onPress={() => navigation.navigate('Stackdatos')} />
-
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => setModalVisible(false)}
-      >
-        <View style={styles.modalContainer}>
-          <Text>Tarjeta </Text>
-          <View style={[styles.card, { backgroundColor }]}>
-           
-            <View style={[styles.rect, { backgroundColor: rectColor }]} />
-
-            {/* Detalle del chip */}
-            <View style={styles.chip}>
-              <View style={styles.chipInner}></View>
-              <View style={styles.chipLine} />
-              <View style={styles.chipLine} />
-            </View>
-
-            <Text style={styles.cardNumber}>3056 930902 5904</Text>
-
-            <View style={styles.bottomInfo}>
-              <View>
-                <Text style={styles.label}>Nombre del propietario</Text>
-                <Text style={styles.name}>JOHN DOE</Text>
-              </View>
-              <View style={styles.expirationContainer}>
-                <Text style={styles.label}>Fecha valida</Text>
-                <Text style={styles.expiration}>01/2023</Text>
-              </View>
-            </View>
-          </View>
-
-          <View style={styles.buttonGroup}>
-            <Button title="Clásica" onPress={() => setCardType('Clasica')} />
-            <Button title="Oro" onPress={() => setCardType('Oro')} />
-            <Button title="Platinum" onPress={() => setCardType('Platinum')} />
-            <Button title="Black" onPress={() => setCardType('Black')} />
-          </View>
-
-          <Button title="Cerrar" onPress={() => setModalVisible(false)} />
+      <View>
+          <Text>Lista de oferyas:</Text>
+          <FlatList
+             data={ofertas}
+             keyExtractor={(item, index) => index.toString()}
+             renderItem={({ item }) => (
+                 <View>
+                     <Text>{item}</Text>
+                 </View>
+             )}
+            
+          />
         </View>
-      </Modal>
+      <Button
+        title="Volver a inicio"
+        onPress={() => navigation.navigate('Stackdatos')}
+        />
     </View>
-  );
+  )
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  modalContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-  },
-  card: {
-    width: 350,
-    height: 220,
-    borderRadius: 10,
-    padding: 20,
-    justifyContent: 'space-between',
-    elevation: 5,
-    overflow: 'hidden', // Importante para el rectángulo
-  },
-  rect: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    width: '113%',
-    height: '50%', // Ocupa la mitad de la altura de la tarjeta
-  },
-  chip: {
-    width: 50,
-    height: 40,
-    backgroundColor: '#ffffff',
-    borderRadius: 5,
-    alignSelf: 'flex-start',
-    marginBottom: 30,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  chipInner: {
-    width: 30,
-    height: 20,
-    borderRadius: 3,
-    backgroundColor: '#e0e0e0',
-  },
-  chipLine: {
-    width: 40,
-    height: 2,
-    backgroundColor: '#bdbdbd',
-    marginTop: 2,
-  },
-  cardNumber: {
-    fontSize: 24,
-    letterSpacing: 3,
-    color: '#ffffff',
-    fontWeight: 'bold',
-  },
-  label: {
-    fontSize: 12,
-    color: '#ffffff',
-    textTransform: 'uppercase',
-    opacity: 0.8,
-  },
-  name: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#ffffff',
-    marginTop: 5,
-  },
-  expirationContainer: {
-    alignItems: 'flex-end',
-  },
-  expiration: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#ffffff',
-  },
-  bottomInfo: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  buttonGroup: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    marginTop: 20,
-  },
-});

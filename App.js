@@ -21,7 +21,7 @@ export default function App() {
       />
 
     <NavigationContainer>
-      <Tab.Navigator  initialRouteName="Productoofertas">
+      <Tab.Navigator  initialRouteName="Stackdatos">
         <Tab.Screen name="Stackdatos" component={Stackdatos} options={{ title: 'Datos del Cliente' }} />
         <Tab.Screen name="Productoofertas" component={Productoofertas} options={{ title: 'Productos y Ofertas' }} />
       </Tab.Navigator>
