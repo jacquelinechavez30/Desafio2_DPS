@@ -44,10 +44,9 @@ export default function App() {
   return (
 <View style={{ flex: 1 }}>
       <StatusBar
-        barStyle="light-content" // También puede ser "dark-content"
-        backgroundColor="#6a51ae" // Solo en Android
+        barStyle="dark-content" 
+        backgroundColor="#0000Ff" 
       />
-      {/* Resto de tu aplicación */}
      
     <NavigationContainer>
       <Tab.Navigator  initialRouteName="Productoofertas">
