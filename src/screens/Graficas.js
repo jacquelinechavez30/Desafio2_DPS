@@ -6,8 +6,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Graficas() {
 
-  const route = useRoute();
-
   const [ingresos, setIngresos] = useState([]);
   const [egresos, setEgresos] = useState([]);
 

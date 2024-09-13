@@ -1,9 +1,46 @@
 import { View, Text, Button } from 'react-native'
 import React from 'react'
 import { useNavigation } from '@react-navigation/native'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Productoofertas() {
+
     const navigation = useNavigation() //para navegar entre pantallas
+    const [ingresos, setIngresos] = useState([]);
+    const [egresos, setEgresos] = useState([]);
+
+    //funcion para mostrar los datos
+    const cargarDatosStorage = async () => {
+    try {
+      const ingresosJSON = await AsyncStorage.getItem('ingresos');
+      const egresosJSON = await AsyncStorage.getItem('egresos');
+      if (ingresosJSON !== null) {
+        setIngresos(JSON.parse(ingresosJSON));
+      }
+      if (egresosJSON !== null) {
+        setEgresos(JSON.parse(egresosJSON));
+      }
+    } catch (error) {
+      console.log(error);
+    }
+};
+
+  useEffect(() => {
+    cargarDatosStorage();
+  }, []);
+
+  //comprobacion de los datos
+  console.log('Ingresos obtenidos:', ingresos);
+  console.log('Egresos obtenidos:', egresos);
+
+  //funcion para sumar los ingresos
+  const ingresostot = ingresos.reduce((acc, ingreso) => acc + parseFloat(ingreso.monto), 0);
+
+  //funcion para sumar los egresos
+  const eggresostot = egresos.reduce((acc, egreso) => acc + parseFloat(egreso.monto), 0);
+
+  console.log('Ingresos totales:', ingresostot);
+  console.log('Egresos totales:', eggresostot);
 
     //funcion para conocer porcentaje de dinero sobrante
     const sobraPorcentaje = (totalI, totalE) => {
