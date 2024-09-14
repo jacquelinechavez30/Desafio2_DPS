@@ -1,4 +1,4 @@
-import { View, Text, Button, FlatList } from 'react-native';
+import {ScrollView, View, Text, Button, FlatList,StyleSheet } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -96,22 +96,26 @@ const Tarjetascredito = () => {
     <View>
       {Clasica && (
         <View>
+          <Text>Tarjeta de Crédito Clásica</Text>
          <Tarjeta tipo="Clasica" />
 
         </View>
       )}
       {Oro && (
         <View>
+           <Text>Tarjeta de Crédito Oro. </Text>
           <Tarjeta tipo='Oro' />
         </View>
       )}
       {Platinum && (
         <View>
+          <Text>Tarjeta de Crédito Platinum. </Text>
           <Tarjeta tipo='Platinum' />
         </View>
       )}
       {Black && (
         <View>
+          <Text>Tarjeta de Crédito Black. </Text>
           <Tarjeta tipo='Black' />
         </View>
       )}
@@ -121,42 +125,62 @@ const Tarjetascredito = () => {
 
     
     return (
-        <View>
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
+         <View>
     
-            <View>
-              
-                <Text>Ofertas disponibles para ti :</Text>
-                <FlatList
-                    data={ofertas}
-                    keyExtractor={(item, index) => index.toString()}
-                    renderItem={({ item }) => (
-                        <View>
-                            <Text>{item}</Text>
-                        </View>
-                    )}
-                />
+    <View>
+      
+        <Text>Ofertas disponibles para ti :</Text>
+        <FlatList
+            data={ofertas}
+            keyExtractor={(item, index) => index.toString()}
+            renderItem={({ item }) => (
+                <View>
+                    <Text>{item}</Text>
+                </View>
+            )}
+        />
 
-                
+        
 
-                
+        
 
 {ofertasFiltradas.length > 0 ? (
-  <View>
-    <Tarjetascredito />
-  </View>
+<View>
+<Tarjetascredito />
+</View>
 ) : (
-  <Text>No hay tarjetas disponibles.</Text>
+<Text>No hay tarjetas disponibles.</Text>
 )}
 
-          
-                
+  
+        
 
-        </View>
+</View>
 
-            <Button
-                title="Volver a inicio"
-                onPress={() => navigation.navigate('Stackdatos')}
-            />
-        </View>
-    )
+    <Button
+        title="Volver a inicio"
+        onPress={() => navigation.navigate('Stackdatos')}
+    />
+</View>
+    </ScrollView>
+  );
 }
+const styles = StyleSheet.create({
+  scrollContainer: {
+    flexDirection: 'column',
+    justifyContent: 'flex-start',  // Asegura que las tarjetas se alineen al inicio
+    alignItems: 'center',          // Centra las tarjetas horizontalmente
+    padding: 10,
+  },
+  rect: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: '113%',
+    height: '50%',
+  },
+
+});
+
+    
