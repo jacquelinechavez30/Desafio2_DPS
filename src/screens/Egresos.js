@@ -323,7 +323,7 @@ export default function Egresos() {
           onPress={() => navigation.navigate("Grafica", { egresos })}
         />
         </View>
-      ) : null
+      ) : (<Text>Debes insertar al menos un egreso</Text>)
       }
     </View>
   );

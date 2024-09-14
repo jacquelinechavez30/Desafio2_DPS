@@ -149,10 +149,10 @@ const ofertasFiltradass = ofertas.filter(oferta =>
 ) : (
 <Text>No hay tarjetas disponibles.</Text>
 )}
- {/*<Button
+ {<Button
         title="Volver a inicio"
         onPress={() => navigation.navigate('Stackdatos')}
-    />*/}
+    />}
 
 </View>
 

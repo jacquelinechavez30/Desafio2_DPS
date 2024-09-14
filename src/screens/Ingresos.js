@@ -316,11 +316,17 @@ export default function Ingresos() {
         </View>
       </Modal>
       <View style={styles.Button}>
-      <Button
-        title="Ir a Egresos"
-        color={'#198754'}
-        onPress={() => navigation.navigate("FormularioEgresos", { ingresos })}
-      />
+      {ingresos.length > 0 ? (
+  <Button
+    title="Ir a Egresos"
+    color={'#198754'}
+    onPress={() => navigation.navigate("FormularioEgresos", { ingresos })}
+  />
+) : (
+  <Text>Debes insertar un ingreso al menos </Text>
+)}
+
+      
       </View>
     </View>
   );
