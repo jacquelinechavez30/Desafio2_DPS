@@ -8,23 +8,27 @@ import {
   FlatList,
   TouchableOpacity,
   Modal,
+  StyleSheet,
+  Dimensions,
 } from "react-native";
 import * as Yup from "yup";
 import RNPickerSelect from "react-native-picker-select";
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Container } from "react-bootstrap";
 
 // Validaciones
 const validationSchema = Yup.object().shape({
   tipoIngreso: Yup.string().required("Selecciona un tipo de ingreso"),
   monto: Yup.number()
     .typeError("El monto debe ser un número")
-    .required("Ingresa un monto $")
-    .positive("El monto debe ser un valor positivo"),
+    .required("Ingresa un monto ($)")
+    .positive("El monto no puede ser negativo"),
 });
 
 export default function Ingresos() {
   const navigation = useNavigation();
+  const { width } = Dimensions.get('window');
 
   const [ingresos, setIngresos] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
@@ -79,9 +83,65 @@ export default function Ingresos() {
     setModalVisible(false);
   };
 
+  
+  //estilos
+  const styles = StyleSheet.create({
+    Text: {
+      margin: 10,
+    },
+    Container: {
+      backgroundColor: '#f8f9fa',
+    },
+    RNPickerSelect: {
+      marginTop: 0,
+      marginBottom: 20,
+      marginLeft: 10,
+      marginRight: 10,
+      width: width * 0.94, 
+      height: 40,
+      borderWidth: 1,
+      backgroundColor: '#fff',
+    },
+    Button: {
+      padding: 10,
+      alignItems: 'center',
+    },
+    buttonModal: {
+      marginTop: 10,
+    },
+    error: {
+      color: 'red',
+      marginTop: 0,
+      marginLeft: 10,
+      marginBottom: 5,
+    },
+    TextInput: {
+      marginTop: 0,
+      marginBottom: 10,
+      marginLeft: 10,
+      marginRight: 10,
+      padding: 10,
+      borderWidth: 0.5,
+      backgroundColor: '#fff',
+    },
+    separator: {
+      height: 1,
+      backgroundColor: '#000',
+      marginVertical: 10,
+      marginLeft: 25,
+      marginRight: 25,
+    },
+    lista: {
+      marginLeft: 30,
+      marginRight: 10,
+      marginBottom: 10,
+      marginTop: 10,
+    },
+  });
+
   return (
     // Formulario para agregar ingresos
-    <View>
+    <View style={styles.Container}>
       <Formik
         initialValues={{ tipoIngreso: "", monto: "" }}
         validationSchema={validationSchema}
@@ -96,7 +156,7 @@ export default function Ingresos() {
           setFieldValue,
         }) => (
           <View>
-            <Text>Tipo de Ingreso:</Text>
+            <Text style={styles.Text}>Tipo de Ingreso:</Text>
             <RNPickerSelect
               onValueChange={(value) => setFieldValue("tipoIngreso", value)}
               items={[
@@ -106,6 +166,7 @@ export default function Ingresos() {
                 { label: "Remesas", value: "Remesas" },
                 { label: "Ingresos Varios", value: "Ingresos Varios" },
               ]}
+              style={{ inputIOS: styles.RNPickerSelect, inputAndroid: styles.RNPickerSelect }}
               value={values.tipoIngreso}
               placeholder={{
                 label: "Selecciona un tipo de ingreso",
@@ -113,40 +174,48 @@ export default function Ingresos() {
               }}
             />
             {touched.tipoIngreso && errors.tipoIngreso && (
-              <Text>{errors.tipoIngreso}</Text>
+              <Text style={styles.error}>{errors.tipoIngreso}</Text>
             )}
 
-            <Text>Monto:</Text>
+            <Text style={styles.Text}>Monto:</Text>
             <TextInput
               onChangeText={handleChange("monto")}
+              style={styles.TextInput}
               value={values.monto}
               keyboardType="numeric"
               placeholder="Ingresa el monto"
             />
-            {touched.monto && errors.monto && <Text>{errors.monto}</Text>}
+            {touched.monto && errors.monto && <Text style={styles.error}>{errors.monto}</Text>}
 
+            <View style={styles.Button}>
             <Button title="Agregar Ingreso" onPress={handleSubmit} />
+            </View>
           </View>
         )}
       </Formik>
 
+      <View style={styles.separator} />
+
       {ingresos.length > 0 ? (
-        <View>
-          <Text>Lista de los ingresos:</Text>
+        <View style={styles.lista}>
+          <Text style={{ color: '#198754', marginBottom: 8, }}>Toca un ingreso para editar</Text> 
+          <Text style={{fontWeight: 'bold'}}>Lista de los ingresos:</Text>
           <FlatList
             data={ingresos}
             keyExtractor={(item, index) => index.toString()}
             renderItem={({ item, index }) => (
               <TouchableOpacity onPress={() => editarIngreso(index)}>
-                <Text>Tipo de Ingreso: {item.tipoIngreso}</Text>
+                <Text>➤ Tipo de Ingreso: {item.tipoIngreso}</Text>
                 <Text>Monto: ${item.monto}</Text>
               </TouchableOpacity>
             )}
           />
         </View>
       ) : (
-        <Text>No hay ingresos disponibles.</Text>
+        <Text style={styles.Text}>No hay ingresos disponibles.</Text>
       )}
+
+      <View style={styles.separator} />
 
       {/* Modal para editar ingresos */}
       <Modal
@@ -186,7 +255,7 @@ export default function Ingresos() {
                   setFieldValue,
                 }) => (
                   <View>
-                    <Text>Editar Ingreso:</Text>
+                    <Text style={styles.Text}>Editar Ingreso:</Text>
                     <RNPickerSelect
                       onValueChange={(value) =>
                         setFieldValue("tipoIngreso", value)
@@ -208,9 +277,10 @@ export default function Ingresos() {
                       <Text>{errors.tipoIngreso}</Text>
                     )}
 
-                    <Text>Introduce el valor del monto del ingreso:</Text>
+                    <Text style={styles.Text}>Nuevo monto:</Text>
                     <TextInput
                       onChangeText={handleChange("monto")}
+                      style={styles.TextInput}
                       value={values.monto}
                       keyboardType="numeric"
                       placeholder="Ingresa el monto"
@@ -219,20 +289,26 @@ export default function Ingresos() {
                       <Text>{errors.monto}</Text>
                     )}
 
+                    <View style={styles.buttonModal}>
                     <Button
                       title="Guardar"
                       color="green"
                       onPress={handleSubmit}
                     />
+                    </View>
+                    <View style={styles.buttonModal}>
                     <Button
                       title="Eliminar"
                       color="red"
                       onPress={eliminarIngreso}
                     />
+                    </View>
+                    <View style={styles.buttonModal}>
                     <Button
                       title="Cancelar"
                       onPress={() => setModalVisible(false)}
                     />
+                    </View>
                   </View>
                 )}
               </Formik>
@@ -240,10 +316,12 @@ export default function Ingresos() {
           </View>
         </View>
       </Modal>
+      <View style={styles.Button}>
       <Button
         title="Ir a Egresos"
         onPress={() => navigation.navigate("FormularioEgresos", { ingresos })}
       />
+      </View>
     </View>
   );
 }
