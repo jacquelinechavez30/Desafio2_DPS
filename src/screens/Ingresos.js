@@ -15,7 +15,6 @@ import * as Yup from "yup";
 import RNPickerSelect from "react-native-picker-select";
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Container } from "react-bootstrap";
 
 // Validaciones
 const validationSchema = Yup.object().shape({
@@ -255,7 +254,7 @@ export default function Ingresos() {
                   setFieldValue,
                 }) => (
                   <View>
-                    <Text style={styles.Text}>Editar Ingreso:</Text>
+                    <Text style={styles.Text}>Editando ingreso:</Text>
                     <RNPickerSelect
                       onValueChange={(value) =>
                         setFieldValue("tipoIngreso", value)
@@ -274,7 +273,7 @@ export default function Ingresos() {
                       }}
                     />
                     {touched.tipoIngreso && errors.tipoIngreso && (
-                      <Text>{errors.tipoIngreso}</Text>
+                      <Text style={styles.error}>{errors.tipoIngreso}</Text>
                     )}
 
                     <Text style={styles.Text}>Nuevo monto:</Text>
@@ -286,7 +285,7 @@ export default function Ingresos() {
                       placeholder="Ingresa el monto"
                     />
                     {touched.monto && errors.monto && (
-                      <Text>{errors.monto}</Text>
+                      <Text style={styles.error}>{errors.monto}</Text>
                     )}
 
                     <View style={styles.buttonModal}>
@@ -319,6 +318,7 @@ export default function Ingresos() {
       <View style={styles.Button}>
       <Button
         title="Ir a Egresos"
+        color={'#198754'}
         onPress={() => navigation.navigate("FormularioEgresos", { ingresos })}
       />
       </View>

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Dimensions } from 'react-native';
+import { View, Text, Dimensions, StyleSheet } from 'react-native';
 import { useRoute } from '@react-navigation/native';
 import { BarChart } from 'react-native-chart-kit';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -41,11 +41,36 @@ export default function Graficas() {
   const labelsEgresos = egresos.map(egreso => egreso.tipoEgreso);
   const dataEgresos = egresos.map(egreso => parseFloat(egreso.monto));
 
+  const styles = StyleSheet.create({
+    Text: {
+      margin: 10,
+      fontWeight: 'bold',
+    },
+    Container: {
+      backgroundColor: '#f8f9fa',
+    },
+    separator: {
+      height: 1,
+      backgroundColor: '#000',
+      marginVertical: 10,
+      marginLeft: 25,
+      marginRight: 25,
+    },
+    containerGrafica: {
+      backgroundColor: '#fff',
+      alignItems: 'center',
+      justifyContent: 'center',
+      margin: 10,
+      borderRadius: 10,
+      padding: 10,  
+    },
+  });
+
   return (
     <View>
-      <Text>Pantalla de Gráficas</Text>
-      <Text>Gráficas de Ingresos:</Text>
+      <Text style={styles.Text}>¡Analiza tus estadísticas!</Text>
 
+      <Text style={styles.Text}>Gráfica de Ingresos:</Text>
       {ingresos.length > 0 ? (
         <BarChart
           data={{
@@ -61,18 +86,20 @@ export default function Graficas() {
           yAxisLabel="$"
           chartConfig={{
             backgroundColor: '#ffffff',
-            backgroundGradientFrom: '#ffffff',
-            backgroundGradientTo: '#ffffff',
+            backgroundGradientFrom: '#1e78fd',
+            backgroundGradientTo: '#5699fd',
             decimalPlaces: 0, // Mostrar sin decimales
             color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
             labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
           }}
         />
       ) : (
-        <Text>No hay ingresos para mostrar.</Text>
+        <Text style={styles.Text}>No hay ingresos para mostrar.</Text>
       )}
 
-      <Text>Gráficas de Egresos:</Text>
+
+      <Text style={styles.Text}>Gráfica de Egresos:</Text>
+
       {egresos.length > 0 ? (
         <BarChart
           data={{
@@ -87,16 +114,16 @@ export default function Graficas() {
           height={220} // Altura del gráfico
           yAxisLabel="$"
           chartConfig={{
-            backgroundColor: '#ffffff',
-            backgroundGradientFrom: '#ffffff',
-            backgroundGradientTo: '#ffffff',
+            backgroundColor: '#f5f5f5',
+            backgroundGradientFrom: '#1e78fd',
+            backgroundGradientTo: '#5699fd',
             decimalPlaces: 0, // Mostrar sin decimales
             color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
             labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
           }}
         />
       ) : (
-        <Text>No hay egresos disponibles</Text>
+        <Text style={styles.Text}>No hay egresos disponibles</Text>
       )}
 
     </View>

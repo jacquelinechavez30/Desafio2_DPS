@@ -8,6 +8,8 @@ import {
   FlatList,
   TouchableOpacity,
   Modal,
+  StyleSheet,
+  Dimensions,
 } from "react-native";
 import * as Yup from "yup";
 import RNPickerSelect from "react-native-picker-select";
@@ -19,12 +21,13 @@ const validationSchema = Yup.object().shape({
   tipoEgreso: Yup.string().required("Selecciona un tipo de Egreso"),
   monto: Yup.number()
     .typeError("El monto debe ser un número")
-    .required("Ingresa un monto $")
-    .positive("El monto debe ser un valor positivo"),
+    .required("Ingresa un monto ($)")
+    .positive("El monto no puede ser negativo"),
 });
 
 export default function Egresos() {
   const navigation = useNavigation();
+  const { width } = Dimensions.get('window');
 
   const [egresos, setEgresos] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
@@ -79,9 +82,64 @@ export default function Egresos() {
     setModalVisible(false);
   };
 
+  //estilos
+  const styles = StyleSheet.create({
+    Text: {
+      margin: 10,
+    },
+    Container: {
+      backgroundColor: '#f8f9fa',
+    },
+    RNPickerSelect: {
+      marginTop: 0,
+      marginBottom: 20,
+      marginLeft: 10,
+      marginRight: 10,
+      width: width * 0.94, 
+      height: 40,
+      borderWidth: 1,
+      backgroundColor: '#fff',
+    },
+    Button: {
+      padding: 10,
+      alignItems: 'center',
+    },
+    buttonModal: {
+      marginTop: 10,
+    },
+    error: {
+      color: 'red',
+      marginTop: 0,
+      marginLeft: 10,
+      marginBottom: 5,
+    },
+    TextInput: {
+      marginTop: 0,
+      marginBottom: 10,
+      marginLeft: 10,
+      marginRight: 10,
+      padding: 10,
+      borderWidth: 0.5,
+      backgroundColor: '#fff',
+    },
+    separator: {
+      height: 1,
+      backgroundColor: '#000',
+      marginVertical: 10,
+      marginLeft: 25,
+      marginRight: 25,
+    },
+    lista: {
+      marginLeft: 30,
+      marginRight: 10,
+      marginBottom: 10,
+      marginTop: 10,
+    },
+  });
+
   return (
     // Formulario para agregar egresos
-    <View>
+    <View style={styles.Container}>
       <Formik
         initialValues={{ tipoEgreso: "", monto: "" }}
         validationSchema={validationSchema}
@@ -96,7 +154,7 @@ export default function Egresos() {
           setFieldValue,
         }) => (
           <View>
-            <Text>Tipo de Egreso:</Text>
+            <Text style={styles.Text}>Tipo de Egreso:</Text>
             <RNPickerSelect
               onValueChange={(value) => setFieldValue("tipoEgreso", value)}
               items={[
@@ -106,6 +164,7 @@ export default function Egresos() {
                 { label: "Alquiler", value: "Alquiler" },
                 { label: "Prestamo", value: "Prestamo" },
               ]}
+              style={{ inputIOS: styles.RNPickerSelect, inputAndroid: styles.RNPickerSelect }}
               value={values.tipoEgreso}
               placeholder={{
                 label: "Selecciona un tipo de Egreso",
@@ -113,40 +172,48 @@ export default function Egresos() {
               }}
             />
             {touched.tipoEgreso && errors.tipoEgreso && (
-              <Text>{errors.tipoEgreso}</Text>
+              <Text style={styles.error}>{errors.tipoEgreso}</Text>
             )}
 
-            <Text>Monto:</Text>
+            <Text style={styles.Text}>Monto:</Text>
             <TextInput
               onChangeText={handleChange("monto")}
+              style={styles.TextInput}
               value={values.monto}
               keyboardType="numeric"
               placeholder="Ingresa el monto"
             />
-            {touched.monto && errors.monto && <Text>{errors.monto}</Text>}
+            {touched.monto && errors.monto && <Text style={styles.error}>{errors.monto}</Text>}
 
+            <View style={styles.Button}>
             <Button title="Agregar Egreso" onPress={handleSubmit} />
+            </View>
           </View>
         )}
       </Formik>
 
+      <View style={styles.separator} />
+
       {egresos.length > 0 ? (
-        <View>
-          <Text>Lista de los egresos:</Text>
+        <View style={styles.lista}>
+          <Text style={{ color: '#198754', marginBottom: 8, }}>Toca un egreso para editar</Text> 
+          <Text style={{fontWeight: 'bold'}}>Lista de los egresos:</Text>
           <FlatList
             data={egresos}
             keyExtractor={(item, index) => index.toString()}
             renderItem={({ item, index }) => (
               <TouchableOpacity onPress={() => editarEgreso(index)}>
-                <Text>Tipo de Egreso: {item.tipoEgreso}</Text>
+                <Text>➤ Tipo de Egreso: {item.tipoEgreso}</Text>
                 <Text>Monto: ${item.monto}</Text>
               </TouchableOpacity>
             )}
           />
         </View>
       ) : (
-        <Text>No hay egresos disponibles.</Text>
+        <Text style={styles.Text}>No hay egresos disponibles.</Text>
       )}
+
+      <View style={styles.separator} />
 
       {/* Modal para editar egresos */}
       <Modal
@@ -186,7 +253,7 @@ export default function Egresos() {
                   setFieldValue,
                 }) => (
                   <View>
-                    <Text>Editar Egreso :</Text>
+                    <Text style={styles.Text}>Editando egreso:</Text>
                     <RNPickerSelect
                       onValueChange={(value) =>
                         setFieldValue("tipoEgreso", value)
@@ -205,34 +272,41 @@ export default function Egresos() {
                       }}
                     />
                     {touched.tipoEgreso && errors.tipoEgreso && (
-                      <Text>{errors.tipoEgreso}</Text>
+                      <Text style={styles.error}>{errors.tipoEgreso}</Text>
                     )}
 
-                    <Text>Introduce el valor del monto del Egreso :</Text>
+                    <Text style={styles.Text}>Nuevo monto:</Text>
                     <TextInput
                       onChangeText={handleChange("monto")}
+                      style={styles.TextInput}
                       value={values.monto}
                       keyboardType="numeric"
                       placeholder="Ingresa el monto"
                     />
                     {touched.monto && errors.monto && (
-                      <Text>{errors.monto}</Text>
+                      <Text style={styles.error}>{errors.monto}</Text>
                     )}
 
+                    <View style={styles.buttonModal}> 
                     <Button
                       title="Guardar"
                       color="green"
                       onPress={handleSubmit}
                     />
+                    </View>
+                    <View style={styles.buttonModal}>
                     <Button
                       title="Eliminar"
                       color="red"
                       onPress={eliminarEgreso}
                     />
+                    </View>
+                    <View style={styles.buttonModal}>
                     <Button
                       title="Cancelar"
                       onPress={() => setModalVisible(false)}
                     />
+                    </View>
                   </View>
                 )}
               </Formik>
@@ -242,31 +316,15 @@ export default function Egresos() {
       </Modal>
       {/* Button para la pantalla de egresos */}
       {egresos.length > 0 ? (
+        <View style={styles.Button}>
         <Button
           title="Ir a Graficas"
+          color={'#198754'}
           onPress={() => navigation.navigate("Grafica", { egresos })}
         />
+        </View>
       ) : null
       }
     </View>
   );
 }
-
- /* return (
-    <View>
-      <Text>Pantalla de Egresos prueba </Text>
-      
-       <Text>
-        para ir a graficas
-       </Text>
-       <Button
-        title="Ir a Graficas"
-        onPress={() => navigation.navigate('Grafica')}
-        />
-
-    </View>
-  );*/
-   /*<Button
-        title="Regresar a Ingresos"
-        onPress={() => navigation.navigate("FormularioIngresos", { egresos })}
-      />*/

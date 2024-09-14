@@ -131,7 +131,7 @@ const ofertasFiltradass = ofertas.filter(oferta =>
     return (
       <ScrollView contentContainerStyle={styles.scrollContainer}>
          <View style={styles.mainContainer}>
-        <Text style={styles.title}>Ofertas disponibles para ti :</Text>
+        <Text style={styles.title}>¡Aprovecha estas ofertas!</Text>
         <FlatList
             data={ofertasFiltradass}
             keyExtractor={(item, index) => index.toString()}
@@ -149,10 +149,10 @@ const ofertasFiltradass = ofertas.filter(oferta =>
 ) : (
 <Text>No hay tarjetas disponibles.</Text>
 )}
- <Button
+ {/*<Button
         title="Volver a inicio"
         onPress={() => navigation.navigate('Stackdatos')}
-    />
+    />*/}
 
 </View>
 
