@@ -2,6 +2,7 @@ import { View, Text, Button, FlatList } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Tarjeta from './Tarjeta';
 
 export default function Productoofertas() {
     const navigation = useNavigation(); //para navegar entre pantallas
@@ -83,13 +84,48 @@ export default function Productoofertas() {
     useEffect(() => {
         setOfertas(rangosRiesgo());
     }, [ingresostot, eggresostot]);
+    const ofertasFiltradas = ofertas.filter(oferta => oferta.includes('Tarjeta de'));
+    const Clasica = ofertasFiltradas.includes('Tarjeta de Crédito Clásica');
+    const Oro = ofertasFiltradas.includes('Tarjeta de Crédito Oro');
+    const Platinum = ofertasFiltradas.includes('Tarjeta de crédito Platinum');
+    const Black = ofertasFiltradas.includes('Tarjeta de crédito Black');
 
+//para tarjeta clasica
+const Tarjetascredito = () => {
+  return (
+    <View>
+      {Clasica && (
+        <View>
+         <Tarjeta tipo="Clasica" />
+
+        </View>
+      )}
+      {Oro && (
+        <View>
+          <Tarjeta tipo='Oro' />
+        </View>
+      )}
+      {Platinum && (
+        <View>
+          <Tarjeta tipo='Platinum' />
+        </View>
+      )}
+      {Black && (
+        <View>
+          <Tarjeta tipo='Black' />
+        </View>
+      )}
+    </View>
+  );
+};
+
+    
     return (
         <View>
-            <Text>Productoofertas</Text>
-            
+    
             <View>
-                <Text>Ofertas disponibles según tu riesgo:</Text>
+              
+                <Text>Ofertas disponibles para ti :</Text>
                 <FlatList
                     data={ofertas}
                     keyExtractor={(item, index) => index.toString()}
@@ -99,7 +135,23 @@ export default function Productoofertas() {
                         </View>
                     )}
                 />
-            </View>
+
+                
+
+                
+
+{ofertasFiltradas.length > 0 ? (
+  <View>
+    <Tarjetascredito />
+  </View>
+) : (
+  <Text>No hay tarjetas disponibles.</Text>
+)}
+
+          
+                
+
+        </View>
 
             <Button
                 title="Volver a inicio"

@@ -1,87 +1,87 @@
-import { View, Text, Button, StyleSheet, Modal } from 'react-native';
-import React, { useState } from 'react';
-import { useNavigation } from '@react-navigation/native';
+import { View, Text, StyleSheet } from 'react-native';
+import React from 'react';
 
-export default function Tarjeta({ cardType }) {
-  const navigation = useNavigation();
-  const [modalVisible, setModalVisible] = useState(false);
+const getCardStyle = (cardType) => {
+  switch (cardType) {
+    case 'Clasica':
+      return getClasicaStyle();
+    case 'Oro':
+      return getOroStyle();
+    case 'Platinum':
+      return getPlatinumStyle();
+    case 'Black':
+      return getBlackStyle();
+   
+  }
+};
 
-  // Función para obtener los estilos según el tipo de tarjeta
-  const getCardStyle = () => {
-    switch (cardType) {
-      case 'Clasica':
-        return { backgroundColor: '#00cc00', rectColor: '#66ff66' };
-      case 'Oro':
-        return { backgroundColor: '#FFD700', rectColor: '#FFC107' };
-      case 'Platinum':
-        return { backgroundColor: '#333333', rectColor: '#D7D6E0' };
-      case 'Black':
-        return { backgroundColor: '#000000', rectColor: '#333333' };
-      default:
-        return { backgroundColor: '#ff9800', rectColor: '#ffa726' };
-    }
-  };
+const getClasicaStyle = () => ({
+  backgroundColor: '#00cc00',
+  rectColor: '#66ff66',
+});
 
-  const { backgroundColor, rectColor } = getCardStyle();
+const getOroStyle = () => ({
+  backgroundColor: '#FFD700',
+  rectColor: '#FFC107',
+});
+
+const getPlatinumStyle = () => ({
+  backgroundColor: '#333333',
+  rectColor: '#D7D6E0',
+});
+
+const getBlackStyle = () => ({
+  backgroundColor: '#000000',
+  rectColor: '#333333',
+});
+
+const Card = ({ cardType }) => {
+  const { backgroundColor, rectColor } = getCardStyle(cardType);
+
+  return (
+    <View style={[styles.card, { backgroundColor }]}>
+      <View style={[styles.rect, { backgroundColor: rectColor }]} />
+
+      {/* Detalle del chip */}
+      <View style={styles.chip}>
+        <View style={styles.chipInner}></View>
+        <View style={styles.chipLine} />
+        <View style={styles.chipLine} />
+      </View>
+
+      <Text style={styles.cardNumber}>3056 930902 5904</Text>
+
+      <View style={styles.bottomInfo}>
+        <View>
+          <Text style={styles.label}>Nombre del propietario</Text>
+          <Text style={styles.name}>JOHN DOE</Text>
+        </View>
+        <View style={styles.expirationContainer}>
+          <Text style={styles.label}>Fecha valida</Text>
+          <Text style={styles.expiration}>01/2023</Text>
+        </View>
+      </View>
+    </View>
+  );
+};
+
+export default function Tarjeta({ tipo }) {
+ // const cardTypes = ['Clasica', 'Oro', 'Platinum', 'Black'];
 
   return (
     <View style={styles.container}>
-      {/* Botón para abrir el modal */}
-      <Button title="Ver tarjeta" onPress={() => setModalVisible(true)} />
       
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => setModalVisible(false)}
-      >
-        <View style={styles.modalContainer}>
-          <View style={[styles.card, { backgroundColor }]}>
-            {/* Rectángulo de diseño en la tarjeta */}
-            <View style={[styles.rect, { backgroundColor: rectColor }]} />
-
-            {/* Detalle del chip */}
-            <View style={styles.chip}>
-              <View style={styles.chipInner}></View>
-              <View style={styles.chipLine} />
-              <View style={styles.chipLine} />
-            </View>
-
-            {/* Número de tarjeta */}
-            <Text style={styles.cardNumber}>3056 930902 5904</Text>
-
-            {/* Información del propietario */}
-            <View style={styles.bottomInfo}>
-              <View>
-                <Text style={styles.label}>Nombre del propietario</Text>
-                <Text style={styles.name}>JOHN DOE</Text>
-              </View>
-              <View style={styles.expirationContainer}>
-                <Text style={styles.label}>Fecha válida</Text>
-                <Text style={styles.expiration}>01/2023</Text>
-              </View>
-            </View>
-          </View>
-
-          {/* Botón para cerrar el modal */}
-          <Button title="Cerrar" onPress={() => setModalVisible(false)} />
-        </View>
-      </Modal>
+        <Card  cardType= {tipo} />
+    
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  modalContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    flexDirection: 'column',  // Alinear en columna (vertical)
+    alignItems: 'center',     // Centrar las tarjetas horizontalmente
+    padding: 10,
   },
   card: {
     width: 350,
@@ -90,14 +90,15 @@ const styles = StyleSheet.create({
     padding: 20,
     justifyContent: 'space-between',
     elevation: 5,
-    overflow: 'hidden', // Importante para el rectángulo
+    overflow: 'hidden',
+    marginBottom: 20, // Espacio entre las tarjetas
   },
   rect: {
     position: 'absolute',
     top: 0,
     left: 0,
     width: '113%',
-    height: '50%', // Ocupa la mitad de la altura de la tarjeta
+    height: '50%',
   },
   chip: {
     width: 50,
