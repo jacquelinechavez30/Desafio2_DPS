@@ -89,32 +89,33 @@ export default function Productoofertas() {
     const Oro = ofertasFiltradas.includes('Tarjeta de Crédito Oro');
     const Platinum = ofertasFiltradas.includes('Tarjeta de crédito Platinum');
     const Black = ofertasFiltradas.includes('Tarjeta de crédito Black');
+    
 
 //para tarjeta clasica
 const Tarjetascredito = () => {
   return (
     <View>
       {Clasica && (
-        <View>
+        <View style={styles.tarjetasContainer}> 
           <Text>Tarjeta de Crédito Clásica</Text>
          <Tarjeta tipo="Clasica" />
 
         </View>
       )}
       {Oro && (
-        <View>
+        <View style={styles.tarjetasContainer}>
            <Text>Tarjeta de Crédito Oro. </Text>
           <Tarjeta tipo='Oro' />
         </View>
       )}
       {Platinum && (
-        <View>
+        <View style={styles.tarjetasContainer}>
           <Text>Tarjeta de Crédito Platinum. </Text>
           <Tarjeta tipo='Platinum' />
         </View>
       )}
       {Black && (
-        <View>
+        <View style={styles.tarjetasContainer}>
           <Text>Tarjeta de Crédito Black. </Text>
           <Tarjeta tipo='Black' />
         </View>
@@ -122,28 +123,24 @@ const Tarjetascredito = () => {
     </View>
   );
 };
-
+const ofertasFiltradass = ofertas.filter(oferta => 
+  oferta.includes('Apertura de cuenta') || 
+  oferta.includes('Crédito personal hasta')
+);
     
     return (
       <ScrollView contentContainerStyle={styles.scrollContainer}>
-         <View>
-    
-    <View>
-      
-        <Text>Ofertas disponibles para ti :</Text>
+         <View style={styles.mainContainer}>
+        <Text style={styles.title}>Ofertas disponibles para ti :</Text>
         <FlatList
-            data={ofertas}
+            data={ofertasFiltradass}
             keyExtractor={(item, index) => index.toString()}
             renderItem={({ item }) => (
                 <View>
-                    <Text>{item}</Text>
+                    <Text style={styles.offerContainer}>{item}</Text>
                 </View>
             )}
         />
-
-        
-
-        
 
 {ofertasFiltradas.length > 0 ? (
 <View>
@@ -152,25 +149,22 @@ const Tarjetascredito = () => {
 ) : (
 <Text>No hay tarjetas disponibles.</Text>
 )}
-
-  
-        
-
-</View>
-
-    <Button
+ <Button
         title="Volver a inicio"
         onPress={() => navigation.navigate('Stackdatos')}
     />
+
 </View>
+
+   
     </ScrollView>
   );
 }
 const styles = StyleSheet.create({
   scrollContainer: {
     flexDirection: 'column',
-    justifyContent: 'flex-start',  // Asegura que las tarjetas se alineen al inicio
-    alignItems: 'center',          // Centra las tarjetas horizontalmente
+    justifyContent: 'flex-start',  
+    alignItems: 'center',         
     padding: 10,
   },
   rect: {
@@ -180,6 +174,30 @@ const styles = StyleSheet.create({
     width: '113%',
     height: '50%',
   },
+  mainContainer: {
+      width: '100%',
+      padding: 10,
+      alignItems: 'center',
+  },
+  title: {
+      fontSize: 18,
+      fontWeight: 'bold',
+      marginBottom: 10,
+  },
+  offerContainer: {
+      marginBottom: 10,
+  },
+  tarjetasContainer: {
+      width: '100%',
+      padding: 10,
+      alignItems: 'center',
+  },
+  tarjetaContainer: {
+      marginBottom: 20,
+      alignItems: 'center',
+      
+  },
+
 
 });
 
